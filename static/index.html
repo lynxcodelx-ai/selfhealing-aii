@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Healing AI — Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ═══ HEADER ═══ -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <div>
+                    <h1>Self-Healing AI</h1>
+                    <p class="subtitle">Autonomous Error Detection, Diagnosis & Recovery</p>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="connection-status" id="connectionStatus">
+                <span class="dot"></span>
+                <span class="text">Connecting...</span>
+            </div>
+            <span class="badge">CODE-E-FIESTA 2026</span>
+        </div>
+    </header>
+
+    <!-- ═══ STATS BAR ═══ -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-value" id="statWorkflows">0</div>
+            <div class="stat-label">Workflows Run</div>
+        </div>
+        <div class="stat-card stat-incidents">
+            <div class="stat-value" id="statIncidents">0</div>
+            <div class="stat-label">Incidents</div>
+        </div>
+        <div class="stat-card stat-resolved">
+            <div class="stat-value" id="statResolved">0</div>
+            <div class="stat-label">Auto-Healed</div>
+        </div>
+        <div class="stat-card stat-failed">
+            <div class="stat-value" id="statFailed">0</div>
+            <div class="stat-label">Failed</div>
+        </div>
+        <div class="stat-card stat-uptime">
+            <div class="stat-value" id="statUptime">100%</div>
+            <div class="stat-label">Uptime</div>
+        </div>
+    </div>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="main-content">
+        <!-- LEFT PANEL: Controls & Workflow Runner -->
+        <section class="panel controls-panel">
+            <div class="panel-header">
+                <h2>⚡ Control Center</h2>
+            </div>
+
+            <div class="control-group">
+                <label>Workflow</label>
+                <select id="workflowSelect" class="select-input">
+                    <option value="order_processing">🛒 Order Processing Pipeline</option>
+                    <option value="data_etl">📊 Data ETL Pipeline</option>
+                    <option value="user_onboarding">👤 User Onboarding Pipeline</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Fault Injection</label>
+                <select id="faultSelect" class="select-input">
+                    <option value="missing_field">🗑️ Missing Field</option>
+                    <option value="schema_mismatch">🔀 Schema Mismatch</option>
+                    <option value="bad_payload">💥 Bad Payload</option>
+                    <option value="type_error">🔤 Type Error</option>
+                    <option value="invalid_value">⚠️ Invalid Value</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-danger" id="btnInjectAndRun" onclick="runFullDemo()">
+                    <span class="btn-icon">🧪</span> Inject Fault & Run
+                </button>
+                <button class="btn btn-success" id="btnRunNormal" onclick="runNormal()">
+                    <span class="btn-icon">▶️</span> Run Normal
+                </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Pipeline Visualization -->
+            <div class="pipeline-section">
+                <h3>🔄 Healing Pipeline</h3>
+                <div class="pipeline" id="pipeline">
+                    <div class="pipeline-stage" id="stage-detect" data-stage="detect">
+                        <div class="stage-icon">🔍</div>
+                        <div class="stage-label">Detect</div>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-stage" id="stage-diagnose" data-stage="diagnose">
+                        <div class="stage-icon">🧠</div>
+                        <div class="stage-label">Diagnose</div>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-stage" id="stage-heal" data-stage="heal">
+                        <div class="stage-icon">💊</div>
+                        <div class="stage-label">Heal</div>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-stage" id="stage-retry" data-stage="retry">
+                        <div class="stage-icon">🔁</div>
+                        <div class="stage-label">Retry</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Demo Buttons -->
+            <div class="divider"></div>
+            <h3>🎯 Quick Demos</h3>
+            <div class="quick-demos">
+                <button class="btn btn-outline btn-sm" onclick="quickDemo('order_processing','missing_field')">Order + Missing Field</button>
+                <button class="btn btn-outline btn-sm" onclick="quickDemo('data_etl','schema_mismatch')">ETL + Schema Mismatch</button>
+                <button class="btn btn-outline btn-sm" onclick="quickDemo('user_onboarding','bad_payload')">Onboarding + Bad Payload</button>
+                <button class="btn btn-outline btn-sm" onclick="quickDemo('order_processing','type_error')">Order + Type Error</button>
+                <button class="btn btn-outline btn-sm" onclick="quickDemo('data_etl','bad_payload')">ETL + Bad Payload</button>
+            </div>
+        </section>
+
+        <!-- CENTER PANEL: Live Event Feed -->
+        <section class="panel feed-panel">
+            <div class="panel-header">
+                <h2>📡 Live Event Feed</h2>
+                <button class="btn btn-ghost btn-sm" onclick="clearFeed()">Clear</button>
+            </div>
+            <div class="event-feed" id="eventFeed">
+                <div class="event-empty">
+                    <p>No events yet. Run a workflow to begin.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: Incident Detail -->
+        <section class="panel detail-panel">
+            <div class="panel-header">
+                <h2>📋 Incident Detail</h2>
+            </div>
+            <div id="incidentDetail" class="incident-detail">
+                <div class="event-empty">
+                    <p>Select an incident from the feed to view details.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══ INCIDENT LIST (bottom) ═══ -->
+    <section class="incidents-table-section">
+        <div class="panel-header">
+            <h2>📊 Incident History</h2>
+            <button class="btn btn-ghost btn-sm" onclick="refreshIncidents()">Refresh</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="incidents-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Workflow</th>
+                        <th>Failed Step</th>
+                        <th>Error</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="incidentTableBody">
+                    <tr><td colspan="6" class="empty-row">No incidents yet</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>Self-Healing AI Automation System — Code-E-Fiesta 2026 | Problem Statement 04 | AI Engineering & Intelligent Monitoring</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
